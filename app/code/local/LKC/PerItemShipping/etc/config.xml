@@ -3,7 +3,7 @@
 
     <modules>
 	<LKC_PerItemShipping>
-	    <version>4.0.0</version>
+	    <version>4.1.0</version>
 	    <!-- This belong in /app/etc/modules/LKC_PerItemShipping.xml
 	    <active>true</active>
 	    <codePool>local</codePool>

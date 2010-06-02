@@ -51,47 +51,79 @@ class LKC_PerItemShipping_Model_Observer
 
             foreach ($allItems as $item)
             {
-                $qty = $item->getQty();
-                if($item->getParentItem())
+                // Skip child items in main loop
+                if ($item->getParentItem())
                 {
-                    $qty *= $item->getParentItem()->getQty();
+                    continue;
                 }
-                $qty -= $item->getFreeQuantity();
-                $qty = max($qty, 0);
 
-                if($request->getFreeShipping() || $qty === 0)
+                $qty = (float) ($item->getFreeShipping() === true ? 0 : $item->getQty() - $item->getFreeShipping());
+
+                // Skip free shipping items
+                if ($qty <= 0.0)
                 {
                     continue;
                 }
 
                 $product = Mage::getModel('catalog/product')->setStoreId($store->getId())->load($item->getProductId());
+                $adjustment = Mage::helper('LKC_PerItemShipping')->getAdjustmentAmount($product, $defaultAdjustment);
 
-                if (!$product->getTypeInstance()->isVirtual())
+                // Skip virtual products
+                if ($product->getTypeInstance()->isVirtual())
                 {
-                    $useQty = Mage::helper('LKC_PerItemShipping')->getUseQty($product);
-                    $adjustment = Mage::helper('LKC_PerItemShipping')->getAdjustmentAmount($product, $defaultAdjustment);
+                    continue;
+                }
 
-                    if ($useQty)
+                if ($item->getHasChildren())
+                {
+                    foreach ($item->getChildren() as $childItem)
                     {
-                        if ($item->getParentItem())
+                        $childQty = (float) ($childItem->getFreeShipping() === true ? 0 : $childItem->getQty() - $childItem->getFreeShipping());
+
+                        // Skip free shipping items
+                        if ($childQty <= 0.0)
                         {
-                            $qty *= $item->getParentItem()->getQty();
+                            continue;
                         }
-                        $adjustment *= $qty;
-                    }
 
-                    if (!isset($itemAdjustments[$item->getId()]))
-                    {
-                        $itemAdjustments[$item->getId()] = 0.0;
-                    }
+                        $childProduct = Mage::getModel('catalog/product')->setStoreId($store->getId())->load($childItem->getProductId());
+                        $childAdjustment = Mage::helper('LKC_PerItemShipping')->getAdjustmentAmount($childProduct, $defaultAdjustment);
 
+                        // Skip virtual products
+                        if ($childProduct->getTypeInstance()->isVirtual())
+                        {
+                            continue;
+                        }
+
+                        if (Mage::helper('LKC_PerItemShipping')->getUseQty($childProduct))
+                        {
+                            $adjustment += ( $childAdjustment * $childQty);
+                        }
+                        else
+                        {
+                            $adjustment += $childAdjustment;
+                        }
+                    }
+                }
+
+                if (!isset($itemAdjustments[$item->getId()]))
+                {
+                    $itemAdjustments[$item->getId()] = 0.0;
+                }
+
+                if (Mage::helper('LKC_PerItemShipping')->getUseQty($product))
+                {
+                    $itemAdjustments[$item->getId()] += ( $adjustment * $qty);
+                }
+                else
+                {
                     $itemAdjustments[$item->getId()] += $adjustment;
                 }
             }
 
             $adjustments->setItems($itemAdjustments);
         }
-        
+
         return $this;
     }
 
