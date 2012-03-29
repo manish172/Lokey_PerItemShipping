@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<config>
+
+    <modules>
+	<LKC_PerItemShipping>
+	    <version>4.0.0</version>
+	    <!-- This belong in /app/etc/modules/LKC_PerItemShipping.xml
+	    <active>true</active>
+	    <codePool>local</codePool>
+	    <depends>
+		<Mage_Core />
+		<Mage_Eav />
+		<Mage_Catalog />
+		<Mage_Adminhtml />
+		<LKC_ShippingAdjustmentsCore />
+	    </depends>
+	    -->
+	</LKC_PerItemShipping>
+    </modules>
+	
+    <adminhtml>
+	<translate>
+	    <modules>
+		<LKC_PerItemShipping>
+		    <files>
+			<default>LKC_PerItemShipping.csv</default>
+		    </files>
+		</LKC_PerItemShipping>
+	    </modules>
+	</translate>
+    </adminhtml>
+	
+    <global>
+	<resources>
+	    <LKC_PerItemShipping>
+		<setup>
+		    <module>LKC_PerItemShipping</module>
+		    <class>Mage_Eav_Model_Entity_Setup</class>
+		</setup>
+		<connection>
+		    <use>core_setup</use>
+		</connection>
+	    </LKC_PerItemShipping>
+	    <LKC_PerItemShipping_write>
+		<connection>
+		    <use>core_write</use>
+		</connection>
+	    </LKC_PerItemShipping_write>
+	    <LKC_PerItemShipping_read>
+		<connection>
+		    <use>core_read</use>
+		</connection>
+	    </LKC_PerItemShipping_read>
+	</resources>
+	<models>
+	    <LKC_PerItemShipping>
+		<class>LKC_PerItemShipping_Model</class>
+	    </LKC_PerItemShipping>
+	</models>
+	<helpers>
+	    <LKC_PerItemShipping>
+		<class>LKC_PerItemShipping_Helper</class>
+	    </LKC_PerItemShipping>
+	</helpers>
+    </global>
+
+    <frontend>
+	<events>
+	    <lkc_shippingadjustments_raterequest_filter>
+		<observers>
+		    <LKC_PerItemShipping>
+			<type>singleton</type>
+			<class>LKC_PerItemShipping/Observer</class>
+			<method>filterRateRequest</method>
+		    </LKC_PerItemShipping>
+		</observers>
+	    </lkc_shippingadjustments_raterequest_filter>
+	    <lkc_shippingadjustments_adjustment_calculate>
+		<observers>
+		    <LKC_PerItemShipping>
+			<type>singleton</type>
+			<class>LKC_PerItemShipping/Observer</class>
+			<method>calculateAdjustment</method>
+		    </LKC_PerItemShipping>
+		</observers>
+	    </lkc_shippingadjustments_adjustment_calculate>
+	</events>
+    </frontend>
+
+    <default>
+	<shipping>
+	    <lkc_shippingadjustments>
+		<default_pisa_amount>0.00</default_pisa_amount>
+	    </lkc_shippingadjustments>
+	</shipping>
+    </default>
+	
+</config>

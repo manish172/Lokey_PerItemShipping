@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+	<shipping>
+	    <groups>
+		<lkc_shippingadjustments>
+		    <fields>
+			<default_pisa_amount translate="label comment" module="LKC_PerItemShipping">
+			    <label>Default PISA Amount</label>
+			    <frontend_type>text</frontend_type>
+			    <sort_order>30</sort_order>
+			    <show_in_default>1</show_in_default>
+			    <show_in_website>1</show_in_website>
+			    <show_in_store>1</show_in_store>
+			    <comment>This is the default per-item adjustment amount when the attribute code is invalid or not found.</comment>
+			</default_pisa_amount>
+		    </fields>
+		</lkc_shippingadjustments>
+	    </groups>
+	</shipping>
+    </sections>
+</config>
