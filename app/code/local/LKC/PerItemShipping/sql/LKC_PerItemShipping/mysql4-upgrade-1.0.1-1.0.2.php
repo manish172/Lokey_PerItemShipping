@@ -3,7 +3,7 @@
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Lokey Coding, LLC - SOFTWARE LICENSE (v1.0)
- * that is bundled with this package in the file LKC_LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.txt
  *
  * @category   Mage
  * @package    LKC_PerItemShipping
