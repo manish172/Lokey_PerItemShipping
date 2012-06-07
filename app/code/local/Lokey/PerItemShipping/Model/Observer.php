@@ -6,13 +6,13 @@
  * that is bundled with this package in the file LICENSE.txt
  *
  * @category   Mage
- * @package    LKC_PerItemShipping
+ * @package    Lokey_PerItemShipping
  * @copyright  Copyright (c) 2009 Lokey Coding, LLC <ip@lokeycoding.com>
  * @license    Lokey Coding, LLC - SOFTWARE LICENSE (v1.0)
  * @author     Lee Saferite <lee.saferite@lokeycoding.com>
  */
 
-class LKC_PerItemShipping_Model_Observer
+class Lokey_PerItemShipping_Model_Observer
 {
     public function filterRateRequest(Varien_Event_Observer $observer)
     {
@@ -23,7 +23,7 @@ class LKC_PerItemShipping_Model_Observer
 
         foreach ($allItems as $item) {
             $product = Mage::getModel('catalog/product')->setStoreId($store->getId())->load($item->getProductId());
-            $rateRequestRemove = Mage::helper('LKC_PerItemShipping')->getRateRequestRemove($product);
+            $rateRequestRemove = Mage::helper('Lokey_PerItemShipping')->getRateRequestRemove($product);
 
             if ($rateRequestRemove && !$removedItems->getItemById($item->getId())) {
                 $removedItems->addItem($item);
@@ -43,7 +43,7 @@ class LKC_PerItemShipping_Model_Observer
         if (!$request->getFreeShipping()) {
             $itemAdjustments = $adjustments->getItems();
 
-            $defaultAdjustment = Mage::helper('LKC_PerItemShipping')->getDefaultAdjustment($store);
+            $defaultAdjustment = Mage::helper('Lokey_PerItemShipping')->getDefaultAdjustment($store);
 
             foreach ($allItems as $item) {
                 // Skip child items in main loop
@@ -59,7 +59,7 @@ class LKC_PerItemShipping_Model_Observer
                 }
 
                 $product = Mage::getModel('catalog/product')->setStoreId($store->getId())->load($item->getProductId());
-                $adjustment = Mage::helper('LKC_PerItemShipping')->getAdjustmentAmount($product, $defaultAdjustment);
+                $adjustment = Mage::helper('Lokey_PerItemShipping')->getAdjustmentAmount($product, $defaultAdjustment);
 
                 // Skip virtual products
                 if ($product->getTypeInstance()->isVirtual()) {
@@ -76,14 +76,14 @@ class LKC_PerItemShipping_Model_Observer
                         }
 
                         $childProduct = Mage::getModel('catalog/product')->setStoreId($store->getId())->load($childItem->getProductId());
-                        $childAdjustment = Mage::helper('LKC_PerItemShipping')->getAdjustmentAmount($childProduct, $defaultAdjustment);
+                        $childAdjustment = Mage::helper('Lokey_PerItemShipping')->getAdjustmentAmount($childProduct, $defaultAdjustment);
 
                         // Skip virtual products
                         if ($childProduct->getTypeInstance()->isVirtual()) {
                             continue;
                         }
 
-                        if (Mage::helper('LKC_PerItemShipping')->getUseQty($childProduct)) {
+                        if (Mage::helper('Lokey_PerItemShipping')->getUseQty($childProduct)) {
                             $adjustment += ($childAdjustment * $childQty);
                         } else {
                             $adjustment += $childAdjustment;
@@ -95,7 +95,7 @@ class LKC_PerItemShipping_Model_Observer
                     $itemAdjustments[$item->getId()] = 0.0;
                 }
 
-                if (Mage::helper('LKC_PerItemShipping')->getUseQty($product)) {
+                if (Mage::helper('Lokey_PerItemShipping')->getUseQty($product)) {
                     $itemAdjustments[$item->getId()] += ($adjustment * $qty);
                 } else {
                     $itemAdjustments[$item->getId()] += $adjustment;

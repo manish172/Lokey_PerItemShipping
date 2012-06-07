@@ -3,9 +3,9 @@
     <sections>
         <shipping>
             <groups>
-                <lkc_shippingadjustments>
+                <lokey_shippingadjustments>
                     <fields>
-                        <default_pisa_amount translate="label comment" module="LKC_PerItemShipping">
+                        <default_pisa_amount translate="label comment">
                             <label>Default PISA Amount</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>30</sort_order>
@@ -15,7 +15,7 @@
                             <comment>This is the default per-item adjustment amount when the attribute code is invalid or not found.</comment>
                         </default_pisa_amount>
                     </fields>
-                </lkc_shippingadjustments>
+                </lokey_shippingadjustments>
             </groups>
         </shipping>
     </sections>
